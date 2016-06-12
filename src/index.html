@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="description" value="">
+    <title>搜索列表</title>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,rem,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem;};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+<!--搜索框和选项卡占位-->
+<!--
+<div class="blank-seat"></div>
+-->
+<div class="search-box-wrapper">
+    <div class="search-box">
+        <input type="text" class="search-input" placeholder="请输入名称搜索" maxlength="100"/>
+        <span class="search-btn"></span>
+    </div>
+</div>
+<div class="tab-wrapper">
+    <ul class="tab">
+        <li class="active" data-name="all">
+            <span>全部</span>
+        </li>
+        <li  data-name="soft">
+            <span>应用</span>
+        </li>
+        <li  data-name="game">
+            <span>游戏</span>
+        </li>
+    </ul>
+    <ul class="tab-content">
+        <li data-name="all" class="active">
+            <div class="items"></div>
+        </li>
+        <li data-name="soft">
+            <div class="items"></div>
+        </li>
+        <li data-name="game">
+            <div class="items"></div>
+        </li>
+    </ul>
+</div>
+<template id="item-tpl">
+    <div class="item" data-id="{id}" data-url="{detail_url}">
+        <img src="{logourl}" alt="">
+        <div class="item-info">
+            <p>{title}</p>
+            <p>{appsize}MB</p>
+            <p>{download}次下载</p>
+        </div>
+        <div class="item-btn-wrap">
+            <a href="{download_url}" class="item-btn">下载</a>
+        </div>
+    </div>
+</template>
+</body>
+</html>

@@ -3,7 +3,8 @@
  */
 var common = require('./common');
 var cfg = require('./config');
-var detailParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid"], downloadParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q"];
+var detailParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q"], downloadParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q"];
+var APP_SIZE_SPLIT = /(\d+(\.\d+)?)KB/;
 module.exports = {
     renderApp: function (id, header, data) {
         var me = this, tpl = me.getTplById(id);
@@ -20,6 +21,7 @@ module.exports = {
                 obj.detail_url = common.resolve(cfg.detailHtml, me.clone(detailParam, _header));
                 obj.download_url = common.resolve(common.api.download, me.clone(downloadParam, _header));
                 obj.download = me.computeDownload(obj.download);
+                obj.appsize = me.computeAppSize(obj.appsize);
                 obj._order = i + 1;
                 html += common.render(tpl, obj);
             })
@@ -36,12 +38,25 @@ module.exports = {
             detailHtml, sliderHtml;
         header.contentid = data.id;
         data.download_url = common.resolve(common.api.download, me.clone(downloadParam, header));
+        obj.download_num = me.computeDownload(obj.download_num);
         detailHtml = common.render(detailTpl, data);
         sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
         $el.html(detailHtml).find('.sliders').html(sliderHtml);
     },
     computeDownload: function(d){
-        return d;
+        d = parseInt(d, 10);
+        var t = d / 10000, ft = Math.floor(t);
+        t = d < 10000 ? d : (ft !== t ?  ft + '万+' : ft + '万');
+        return t;
+    },
+    computeAppSize: function (d){
+        var size = d || 0;
+        var match = d.match(APP_SIZE_SPLIT);
+        if(match){
+            size =  parseFloat(match[1], 10)
+        }
+        size = size > 1000 ? new Number(size / 1024).toFixed(1)  + 'MB' :  new Number(size).toFixed(1) + 'KB';
+        return size;
     },
     getTplById: function (id){
         return  $('#' + id).html()

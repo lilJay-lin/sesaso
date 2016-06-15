@@ -93,7 +93,7 @@ let config = {
          jQuery: "jquery",
          "window.jQuery": "jquery"
         }),
-        new ExtractTextPlugin('css/sesosa.[contenthash:8].css', {allChunks: true}),
+        new ExtractTextPlugin('css/[name].[contenthash:8].css', {allChunks: true}),
         new HtmlWebpackPlugin({
             template: './src/detail.html',
             filename: 'detail.html',

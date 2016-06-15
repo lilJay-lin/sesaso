@@ -18,48 +18,50 @@
 <!--
 <div class="blank-seat"></div>
 -->
-<div class="search-box-wrapper">
-    <div class="search-box">
-        <input type="text" class="search-input" placeholder="请输入名称搜索" maxlength="100"/>
-        <span class="search-btn"></span>
+<div id="container" style="display:none">
+    <div class="search-box-wrapper">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="请输入名称搜索" maxlength="100"/>
+            <span class="search-btn"></span>
+        </div>
+    </div>
+    <div class="tab-wrapper">
+        <ul class="tab">
+            <li class="active" data-name="all">
+                <span>全部</span>
+            </li>
+            <li  data-name="soft">
+                <span>应用</span>
+            </li>
+            <li  data-name="game">
+                <span>游戏</span>
+            </li>
+        </ul>
+        <ul class="tab-content">
+            <li data-name="all" class="active">
+                <div class="items"></div>
+            </li>
+            <li data-name="soft">
+                <div class="items"></div>
+            </li>
+            <li data-name="game">
+                <div class="items"></div>
+            </li>
+        </ul>
     </div>
 </div>
-<div class="tab-wrapper">
-    <ul class="tab">
-        <li class="active" data-name="all">
-            <span>全部</span>
-        </li>
-        <li  data-name="soft">
-            <span>应用</span>
-        </li>
-        <li  data-name="game">
-            <span>游戏</span>
-        </li>
-    </ul>
-    <ul class="tab-content">
-        <li data-name="all" class="active">
-            <div class="items"></div>
-        </li>
-        <li data-name="soft">
-            <div class="items"></div>
-        </li>
-        <li data-name="game">
-            <div class="items"></div>
-        </li>
-    </ul>
-</div>
 <template id="item-tpl">
-    <div class="item" data-id="{id}" data-url="{detail_url}">
+    <a class="item" data-id="{id}" target="_blank" href="{detail_url}">
         <img src="{logourl}" alt="">
         <div class="item-info">
             <p>{title}</p>
-            <p>{appsize}MB</p>
+            <p>{appsize}</p>
             <p>{download}次下载</p>
         </div>
         <div class="item-btn-wrap">
-            <a href="{download_url}" class="item-btn">下载</a>
+            <span data-href="{download_url}" class="item-btn">下载</span>
         </div>
-    </div>
+    </a>
 </template>
 </body>
 </html>

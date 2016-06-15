@@ -5,7 +5,8 @@ var common = require('./common'),
     app = require('./app'),
     Tab = require('./tab'),
     RefreshProxy = require('./refresh_proxy'),
-    config = require('./config');;
+    config = require('./config'),
+    Toast = require('./toast');
 
 require('./assets/css/sesosa.css');
 
@@ -22,9 +23,15 @@ var url = location.href,
     tplId ='item-tpl',
     idx = url.indexOf('?'),
     qryObj = common.formatQuery(url.substr(idx + 1)),
-    tab, defaultParam, refreshProxy, searchUrl, type, $searchInput = $('.search-input');
+    tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input');
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
+
+/*toast实例化*/
+toast = new Toast({
+    el: document.body
+});
+
 /*选项卡实例化*/
 tab = new Tab({
     el: '.tab-wrapper',
@@ -129,19 +136,26 @@ function search(paramObj){
 qryObj.t = qryObj.t || allApps;
 if(qryObj.q){
     $searchInput.val(decodeURIComponent(qryObj.q));
+    search(qryObj);
 }
-search(qryObj);
 
 /*点击开始查询*/
 $('.search-btn').on('touchstart', function(){
     var val = $searchInput.val().trim();
+    if(val === ''){
+        toast.show('请输入名称搜索');
+        return;
+    }
     qryObj.q = val;
     qryObj.pid = 1;
     tab.clear();
     refreshProxy.clear();
     search(qryObj);
-})
+});
 
-$(document).delegate('.item', 'click', function(){
+$(document).delegate('.item-btn', 'click', function(e){
+    e.preventDefault();
     location.href = $(this).data('url');
 });
+
+$('#container').show();

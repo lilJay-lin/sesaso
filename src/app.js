@@ -38,7 +38,7 @@ module.exports = {
             detailHtml, sliderHtml;
         header.contentid = data.id;
         data.download_url = common.resolve(common.api.download, me.clone(downloadParam, header));
-        obj.download_num = me.computeDownload(obj.download_num);
+        data.download_num = me.computeDownload(data.download_num);
         detailHtml = common.render(detailTpl, data);
         sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
         $el.html(detailHtml).find('.sliders').html(sliderHtml);

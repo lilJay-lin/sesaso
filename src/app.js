@@ -16,7 +16,7 @@ module.exports = {
             var html = '', obj = {}, _header = $.extend({}, header);
             $.each(arr, function(i){
                 obj = this;
-                _header.t = obj.category;
+                _header.t = obj.category || header.t;
                 _header.contentid = obj.id;
                 obj.detail_url = common.resolve(cfg.detailHtml, me.clone(detailParam, _header));
                 obj.download_url = common.resolve(common.api.download, me.clone(downloadParam, _header));

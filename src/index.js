@@ -74,7 +74,8 @@ function search(paramObj){
                     'f': paramObj.f,
                     'sessionId': paramObj.sessionId,
                     'D': paramObj.D,
-                    'q': paramObj.q
+                    'q': paramObj.q,
+                    't': paramObj.t
                 });
             })(data.results.header || {});
             html = app.renderApp(tplId, _header, _data.list);

@@ -2,8 +2,7 @@
  * Created by linxiaojie on 2016/6/7.
  */
 var slice = [].slice,
-    TAB_CLICK = 'tab.click',
-    TAB_CONTENT_CLICK = 'tab.content.click';
+    TAB_CLICK = 'click.tab';
 function Tab(opts){
     if(!(this instanceof Tab)){
         return new Tab(opts)
@@ -21,12 +20,17 @@ Tab.prototype = {
     constructor: Tab,
     init: function () {
         var me = this;
+        /*
+         * 初始化li内容区域高度
+         * */
+        me.$tabContent.children('li').height($(window).height() - parseInt(me.$tabContent.css('padding-top'), 10) - parseInt(me.$tabContent.css('padding-bottom'), 10) - 5);
         me.on(TAB_CLICK, function (e, name) {
-            me.showTab(name)
+            me.switchTab(name);
+            me.trigger('tab.switch');
         });
-        me.on(TAB_CONTENT_CLICK, function (e, name) {
+/*        me.on(TAB_CONTENT_CLICK, function (e, name) {
             me.showTabContent(name)
-        });
+        });*/
         me.activeClass = 'active';
         me.initTab();
         me.switchTab(me.active)
@@ -46,7 +50,7 @@ Tab.prototype = {
     },
     initTab: function () {
         var me = this;
-        me.$tab.delegate('li', 'touchstart', function () {
+        me.$tab.delegate('li', 'click', function () {
             var name = $(this).data('name')
             me.$event.trigger(TAB_CLICK, [name])
         })
@@ -74,7 +78,8 @@ Tab.prototype = {
         this.$tabContent.find('li[data-name="' + name + '"]').find('.items').append(html)
     },
     clear: function () {
-        this.$tabContent.find('.items').html('')
+        this.$tabContent.find('.items').html('');
+        this.$tabContent.children().scroll().top = 0;
     }
 }
 module.exports = Tab;

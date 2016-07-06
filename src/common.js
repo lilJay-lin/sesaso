@@ -17,6 +17,8 @@ function property(key){
 }
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 var getLength = property('length');
+var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
+var host = '';//http://localhost:8080';
 function isArrayLike(obj){
     var length = getLength(obj);
     return typeof  length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
@@ -29,9 +31,6 @@ function isArrayLike(obj){
  * 根据传入String做变量替换，返回替换之后的字符串
  */
 function render(template, context) {
-
-    var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
-
     return template.replace(tokenReg, function (word, slash1, token, slash2) {
         if (slash1 || slash2) {
             return word.replace('\\', '');
@@ -143,9 +142,9 @@ module.exports =  {
         appSoftWare: 'appSoftWare'
     },
     api: {
-        search: '/cpasearch/Search',
-        detail:　'/cpasearch/appContent',
-        download: '/cpasearch/download'
+        search: host + '/cpasearch/Search',
+        detail:　host + '/cpasearch/appContent',
+        download: host + '/cpasearch/download'
     },
     goBack: function(){
         history.go(-1);

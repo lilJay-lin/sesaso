@@ -4,12 +4,12 @@
 var Refresh = require('./refresh');
 var common = require('./common');
 function RefreshProxy(){
-    this.name = ''
+    this.name = '';
+    this.refreshes = {};
 }
 
 RefreshProxy.prototype = {
     constructor: RefreshProxy,
-    refreshes: {},
     /*实例化refresh*/
     addScroll: function(obj){
         var me = this,
@@ -35,6 +35,13 @@ RefreshProxy.prototype = {
             newRf.start();
             this.name = name;
         }
+    },
+    forceStart: function(name){
+        var me = this;
+        me.destroy();
+        var newRf = me.refreshes[name] || me.addScroll({name: name});
+        newRf.start();
+        this.name = name;
     },
     /*清除所有refresh*/
     clear: function (){

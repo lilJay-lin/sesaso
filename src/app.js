@@ -44,7 +44,8 @@ module.exports = {
         $el.html(detailHtml).find('.sliders').html(sliderHtml);
     },
     computeDownload: function(d){
-        d = parseInt(d, 10);
+        d = d ?  parseInt(d, 10) : 1000;
+        d = d < 1000 ? 1000 + d : d;
         var t = d / 10000, ft = Math.floor(t);
         t = d < 10000 ? d : (ft !== t ?  ft + '万+' : ft + '万');
         return t;

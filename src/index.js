@@ -53,8 +53,10 @@ function search(paramObj){
         function addScroll(url, data, name, tabName){
             var _data = data.results[tabName],
                 _header,
-                html, d = $.extend({total: parseInt(_data.total, 10)}, paramObj);
+                html = '<div>您搜索的关键词没有相关搜索结果，谢谢！</div>',
+                d = $.extend({total: parseInt(_data.total, 10)}, paramObj);
             if(d.total === 0){
+                tab.render(html, name);
                 return;
             }
             _header = (function(obj){

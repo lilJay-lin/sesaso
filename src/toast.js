@@ -1,7 +1,7 @@
 /**
  * Created by linxiaojie on 2015/12/15.
  */
-require('./assets/css/toast.css');
+//require('./assets/css/toast.css');
 var View = require('./view');
 
 var Toast = View.extends({

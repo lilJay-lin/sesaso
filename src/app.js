@@ -20,7 +20,7 @@ module.exports = {
                 _header.contentid = obj.id;
                 obj.detail_url = common.resolve(cfg.detailHtml, me.clone(detailParam, _header));
                 obj.download_url = common.resolve(common.api.download, me.clone(downloadParam, _header));
-                obj.download = me.computeDownload(obj.download);
+                obj.download = me.computeDownload(obj.download, 1);
                 obj.appsize = me.computeAppSize(obj.appsize);
                 obj._order = i + 1;
                 html += common.render(tpl, obj);
@@ -34,20 +34,26 @@ module.exports = {
         var me = this,
             $el = $(el),
             detailTpl = me.getTplById(detailId),
-            sliderTpl = me.getTplById(sliderId),
+            //sliderTpl = me.getTplById(sliderId),
             detailHtml, sliderHtml;
         header.contentid = data.id;
         data.download_url = common.resolve(common.api.download, me.clone(downloadParam, header));
         data.download_num = me.computeDownload(data.download_num);
+        data.appsize = me.computeAppSize(data.appsize);
+        data.updatedate = data.updatedate.split(/\s+/)[0];
+        data.score = me.computeAppScore(header.f);
         detailHtml = common.render(detailTpl, data);
-        sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
-        $el.html(detailHtml).find('.sliders').html(sliderHtml);
+        //sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
+        $el.html(detailHtml).find('.sliders');//.html(sliderHtml);
     },
-    computeDownload: function(d){
+    computeDownload: function(d, change){
         d = d ?  parseInt(d, 10) : 1000;
         d = d < 1000 ? 1000 + d : d;
-        var t = d / 10000, ft = Math.floor(t);
-        t = d < 10000 ? d : (ft !== t ?  ft + '万+' : ft + '万');
+        var t = d, ft;
+        if (!!change) {
+            t = d / 10000, ft = Math.floor(t);
+            t = d < 10000 ? d : (ft !== t ?  ft + '万+' : ft + '万');
+        }
         return t;
     },
     computeAppSize: function (d){
@@ -58,6 +64,9 @@ module.exports = {
         }
         size = size > 1000 ? new Number(size / 1024).toFixed(1)  + 'MB' :  new Number(size).toFixed(1) + 'KB';
         return size;
+    },
+    computeAppScore: function (f) {
+        return f === 'C' ? '90%' : '80%'
     },
     getTplById: function (id){
         return  $('#' + id).html()

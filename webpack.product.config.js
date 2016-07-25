@@ -18,7 +18,6 @@ let config = {
         extensions: ['', '.js', 'jsx', '.less', '.css', '.scss', '.ejs', '.png', '.jpg']
     },
     entry: {
-        'detail': path.resolve(APP_PATH, 'detail'),
         'index': path.resolve(APP_PATH, 'index')
     },
     output: {
@@ -75,12 +74,12 @@ let config = {
     },
     plugins:[
         new webpack.optimize.UglifyJsPlugin({minimize: true}),
-        /*        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),*/
-        new webpack.optimize.CommonsChunkPlugin({
+                new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
+/*        new webpack.optimize.CommonsChunkPlugin({
          name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
          chunks: ['detail', 'index'],
-         //minChunks: chunks.length // 提取所有entry共同依赖的模块
-         }),
+         minChunks: chunks.length // 提取所有entry共同依赖的模块
+         }),*/
         /*        new HtmlWebpackPlugin({
          template: './src/index.html',
          filename: 'index.html',
@@ -94,17 +93,16 @@ let config = {
          "window.jQuery": "jquery"
         }),
         new ExtractTextPlugin('css/[name].[contenthash:8].css', {allChunks: true}),
-        new HtmlWebpackPlugin({
+/*        new HtmlWebpackPlugin({
             template: './src/detail.html',
             filename: 'detail.html',
             inject: 'body',
             chunks: ['detail', 'vendors']
-        }),
+        }),*/
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
-            inject: 'body',
-            chunks: ['index', 'vendors']
+            inject: 'body'
         })
     ]
 };

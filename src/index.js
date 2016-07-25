@@ -6,7 +6,8 @@ var common = require('./common'),
     Tab = require('./tab'),
     RefreshProxy = require('./refresh_proxy'),
     config = require('./config'),
-    Toast = require('./toast');
+    Toast = require('./toast'),
+    renderDetail = require('./detail');
 
 require('./assets/css/sesosa.css');
 
@@ -23,14 +24,16 @@ var url = location.href,
     tplId ='item-tpl',
     idx = url.indexOf('?'),
     qryObj = common.formatQuery(url.substr(idx + 1)),
-    tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input');
+    tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input'),
+    $pages = $('.page');
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
 
 function search(paramObj){
     paramObj = $.extend({}, defaultParam, paramObj);
-    tab && tab.clear()
-    refreshProxy.clear();
+    /*refreshProxy.clear();
+    tab && tab.clear();*/
+    clearSearch();
     common.req.get(common.resolve(searchUrl, paramObj)).done(function(data){
         type = paramObj.t;
         if(type === void 0 || type === '' || type === null){
@@ -53,7 +56,7 @@ function search(paramObj){
         function addScroll(url, data, name, tabName){
             var _data = data.results[tabName],
                 _header,
-                html = '<div>您搜索的关键词没有相关搜索结果，谢谢！</div>',
+                html = '<div class="none">您搜索的关键词没有相关搜索结果，谢谢！</div>',
                 d = $.extend({total: parseInt(_data.total, 10)}, paramObj);
             if(d.total === 0){
                 tab.render(html, name);
@@ -122,6 +125,19 @@ function search(paramObj){
         refreshProxy.forceStart(activeTab);
     })
 }
+function clearSearch(all){
+    all && $searchInput.val('');
+    refreshProxy.clear();
+    tab && tab.clear();
+}
+
+/*
+* 跳转到具体页面
+* */
+function switchPage(page){
+    $pages.hide();
+    $('.' + page).show();
+}
 
 $(function(){
     /*toast实例化*/
@@ -151,7 +167,7 @@ $(function(){
     }
 
     /*点击开始查询*/
-    $('.search-btn').on('click', function(){
+    $('.page-index .search-btn').on('click', function(){
         var $el = $(this);
         if($el.data('lock')){
             return;
@@ -167,15 +183,29 @@ $(function(){
         }
         qryObj.q = val;
         qryObj.pid = 1;
-        tab.clear();
         refreshProxy.clear();
+        tab.clear();
         search(qryObj);
     });
 
-    $(document).delegate('.item-btn', 'click', function(e){
+    /*
+    * 点击返回按钮显示搜索主界面
+    * */
+    $(document).delegate('.go-back', 'click', function(){
+        switchPage('page-index');
+    });
+    $(document).delegate('.js-show-search', 'click', function(){
+        clearSearch(1);
+        switchPage('page-index');
+    });
+
+    $(document).delegate('.item', 'click', function(e){
         e.preventDefault();
-        location.href = $(this).data('href');
+        switchPage('page-detail');
+        renderDetail($(this).data('href'));
+        //location.href = $(this).data('href');
     });
 
     $('#container').show();
+    switchPage('page-index');
 });

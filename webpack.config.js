@@ -93,12 +93,12 @@ let config = {
          jQuery: "jquery",
          "window.jQuery": "jquery"
         }),
-        new HtmlWebpackPlugin({
+/*        new HtmlWebpackPlugin({
             template: './src/detail.html',
             filename: 'detail.html',
             inject: 'body',
             chunks: ['detail']
-        }),
+        }),*/
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',

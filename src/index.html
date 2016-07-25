@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <meta http-equiv="Cache-Control" content="no-transform"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -11,57 +10,111 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="description" value="">
     <title>搜索列表</title>
-    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,rem,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem;};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+    <script>!function(n){var e=n.document,t=e.documentElement,dpr,scale;var isAndroid=n.navigator.appVersion.match(/android/gi),isIPhone=n.navigator.appVersion.match(/iphone/gi),devicePixelRatio=n.devicePixelRatio;if(isIPhone){if(devicePixelRatio>=2&&(!dpr||dpr>=2)){dpr=2}else{dpr=1}}else{dpr=1}scale=1/dpr;var metaEl=e.createElement("meta");var scale=dpr===1?1:0.5;metaEl.setAttribute("name","viewport");metaEl.setAttribute("content","initial-scale="+scale+", maximum-scale="+scale+", minimum-scale="+scale+", user-scalable=no");if(t.firstElementChild){t.firstElementChild.appendChild(metaEl)}else{var wrap=e.createElement("div");wrap.appendChild(metaEl);e.write(wrap.innerHTML)}var i=1440,d=i/200,rem,o="orientationchange" in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>i&&(n=i),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
 </head>
 <body>
 <!--搜索框和选项卡占位-->
 <!--
 <div class="blank-seat"></div>
 -->
-<div id="container" style="display:none">
-    <div class="search-box-wrapper">
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="请输入名称搜索" maxlength="100"/>
-            <span class="search-btn"></span>
+<div id="container" style="display:none;height: 100%;">
+    <div  class="page page-index">
+        <div class="search-box-wrapper">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="请输入名称搜索" maxlength="100"/>
+                <span class="search-btn"></span>
+            </div>
+        </div>
+        <div class="tab-wrapper">
+            <ul class="tab">
+                <li class="active" data-name="all">
+                    <span>全部</span>
+                </li>
+                <li  data-name="soft">
+                    <span>应用</span>
+                </li>
+                <li  data-name="game">
+                    <span>游戏</span>
+                </li>
+            </ul>
+            <ul class="tab-content">
+                <li data-name="all" class="active">
+                    <div class="items"></div>
+                </li>
+                <li data-name="soft">
+                    <div class="items"></div>
+                </li>
+                <li data-name="game">
+                    <div class="items"></div>
+                </li>
+            </ul>
         </div>
     </div>
-    <div class="tab-wrapper">
-        <ul class="tab">
-            <li class="active" data-name="all">
-                <span>全部</span>
-            </li>
-            <li  data-name="soft">
-                <span>应用</span>
-            </li>
-            <li  data-name="game">
-                <span>游戏</span>
-            </li>
-        </ul>
-        <ul class="tab-content">
-            <li data-name="all" class="active">
-                <div class="items"></div>
-            </li>
-            <li data-name="soft">
-                <div class="items"></div>
-            </li>
-            <li data-name="game">
-                <div class="items"></div>
-            </li>
-        </ul>
+    <div class="page page-detail">
+        <header>
+            <div class="float">
+                <a href="javascript:void(0);" class="go-back"></a>
+                &nbsp;
+                <a href="javascript:void(0);" class="search-btn js-show-search"></a>
+            </div>
+        </header>
+        <div class="js-content">
+
+        </div>
     </div>
 </div>
 <template id="item-tpl">
-    <a class="item" data-id="{id}" target="_blank" href="{detail_url}">
+    <div class="item" data-id="{id}" target="_blank" data-href="{detail_url}">
         <img src="{logourl}" alt="">
         <div class="item-info">
             <p>{title}</p>
-            <p>{appsize}</p>
             <p>{download}次下载</p>
+            <p>{appsize}</p>
         </div>
         <div class="item-btn-wrap">
-            <span data-href="{download_url}" class="item-btn">下载</span>
+            <a href="{download_url}" class="item-btn">下载</a>
         </div>
-    </a>
+    </div>
+</template>
+<template id="detail-tpl">
+    <section class="detail-box">
+        <div class="detail">
+            <img src="{logourl}" alt="">
+            <div class="detail-info">
+                <h1>{title}</h1>
+                <div class="detail-star">
+                    <div style="width:{score}" class="detail-star-status"></div>
+                </div>
+                <p>
+                    语言：<span class="detail-lang">简体中文</span>类型：<span class="detail-type">{grade2_type}</span>
+                </p>
+                <p>
+                    人气：<span class="detail-lang">{download_num}</span>大小：<span class="detail-type">{appsize}</span>
+                </p>
+                <p>
+                    更新：<span class="detail-lang">{updatedate}</span>
+                </p>
+            </div>
+        </div>
+        <a href="{download_url}" class="detail-btn">下载</a>
+    </section>
+    <section class="detail-panel">
+        <div class="detail-panel-hd">
+            <span></span>
+            <h2>应用介绍</h2>
+        </div>
+        <div class="detail-panel-bd">
+            <div class="ellipse">
+                <div class="ellipse-clip">
+                    {content}
+                </div>
+                <div class="ellipse-original">
+                    {content}
+                </div>
+                <span class="ellipse-btn">展开</span>
+            </div>
+        </div>
+    </section>
 </template>
 </body>
 </html>

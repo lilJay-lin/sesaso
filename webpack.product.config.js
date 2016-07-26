@@ -74,7 +74,7 @@ let config = {
     },
     plugins:[
         new webpack.optimize.UglifyJsPlugin({minimize: true}),
-                new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
+                //new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
 /*        new webpack.optimize.CommonsChunkPlugin({
          name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
          chunks: ['detail', 'index'],

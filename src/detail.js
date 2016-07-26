@@ -4,7 +4,7 @@
 var common = require('./common'),
     config = require('./config')
     app = require('./app'),
-    Slider = require('./slider'),
+    //Slider = require('./slider'),
     RefreshProxy = require('./refresh_proxy');
 //require('./assets/css/sesosa.css');
 

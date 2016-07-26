@@ -200,7 +200,7 @@ $(function(){
     });
 
     $(document).delegate('.item', 'click', function(e){
-        e.preventDefault();
+        //e.preventDefault();
         switchPage('page-detail');
         renderDetail($(this).data('href'));
         //location.href = $(this).data('href');

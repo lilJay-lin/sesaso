@@ -78,8 +78,16 @@ Tab.prototype = {
         this.$tabContent.find('li[data-name="' + name + '"]').find('.items').append(html)
     },
     clear: function () {
+        this.$tabContent.children().each(function () {
+            $(this).css({
+                display:'block'
+            })
+            $(this)[0].scrollTop = 0
+            $(this).css({
+                display: 'none'
+            })
+        })
         this.$tabContent.find('.items').html('');
-        this.$tabContent.children().scroll().top = 0;
     }
 }
 module.exports = Tab;

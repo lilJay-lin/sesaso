@@ -167,7 +167,8 @@ $(function(){
     }
 
     /*点击开始查询*/
-    $('.page-index .search-btn').on('click', function(){
+    $('.page-index .search-btn').on('touchend', function(e){
+        e.preventDefault();
         var $el = $(this);
         if($el.data('lock')){
             return;
@@ -191,15 +192,21 @@ $(function(){
     /*
     * 点击返回按钮显示搜索主界面
     * */
-    $(document).delegate('.go-back', 'click', function(){
+    $(document).delegate('.go-back', 'touchend', function(e){
+        e.preventDefault();
         switchPage('page-index');
     });
-    $(document).delegate('.js-show-search', 'click', function(){
+    $(document).delegate('.js-show-search', 'touchend', function(e){
+        e.preventDefault();
         clearSearch(1);
         switchPage('page-index');
     });
 
     $(document).delegate('.item', 'click', function(e){
+        e.preventDefault();
+        if($(e.target).hasClass('item-btn')){
+            return ;
+        }
         //e.preventDefault();
         switchPage('page-detail');
         renderDetail($(this).data('href'));

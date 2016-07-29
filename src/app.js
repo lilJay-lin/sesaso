@@ -34,7 +34,7 @@ module.exports = {
         var me = this,
             $el = $(el),
             detailTpl = me.getTplById(detailId),
-            //sliderTpl = me.getTplById(sliderId),
+            sliderTpl = me.getTplById(sliderId),
             detailHtml, sliderHtml;
         header.contentid = data.id;
         data.download_url = common.resolve(common.api.download, me.clone(downloadParam, header));
@@ -43,8 +43,8 @@ module.exports = {
         data.updatedate = data.updatedate.split(/\s+/)[0];
         data.score = me.computeAppScore(header.f);
         detailHtml = common.render(detailTpl, data);
-        //sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
-        $el.html(detailHtml).find('.sliders');//.html(sliderHtml);
+        sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
+        $el.html(detailHtml).find('.sliders').html(sliderHtml);
     },
     computeDownload: function(d, change){
         d = d ?  parseInt(d, 10) : 1000;

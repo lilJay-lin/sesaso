@@ -11,14 +11,14 @@ let APP_PATH = path.resolve(ROOT_PATH, 'src');
 let NODE_MODULES =  path.resolve(ROOT_PATH, '/node_modules');
 
 let config = {
-    devtool: 'eval-source-map',
+    //devtool: 'eval-source-map',
     resolve: {
         root: [ APP_PATH, NODE_MODULES],
         alias: {},
         extensions: ['', '.js', 'jsx', '.less', '.css', '.scss', '.ejs', '.png', '.jpg']
     },
     entry: {
-        'detail': path.resolve(APP_PATH, 'detail'),
+        /*'detail': path.resolve(APP_PATH, 'detail'),*/
         'index': path.resolve(APP_PATH, 'index')
     },
     output: {
@@ -74,7 +74,7 @@ let config = {
          }*/
     },
     plugins:[
-        //new webpack.optimize.UglifyJsPlugin({minimize: true}),
+        new webpack.optimize.UglifyJsPlugin({minimize: true}),
         /*        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),*/
         /*        new CommonsChunkPlugin({
          name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
@@ -103,7 +103,7 @@ let config = {
             template: './src/index.html',
             filename: 'index.html',
             inject: 'body',
-            chunks: ['index']
+            /*chunks: ['index']*/
         })
     ]
 };

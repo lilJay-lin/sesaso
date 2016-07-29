@@ -50,7 +50,8 @@ Tab.prototype = {
     },
     initTab: function () {
         var me = this;
-        me.$tab.delegate('li', 'click', function () {
+        me.$tab.delegate('li', 'touchend', function (e) {
+            e.preventDefault();
             var name = $(this).data('name')
             me.$event.trigger(TAB_CLICK, [name])
         })

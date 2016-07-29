@@ -4,7 +4,7 @@
 var common = require('./common'),
     config = require('./config')
     app = require('./app'),
-    //Slider = require('./slider'),
+    Slider = require('./slider'),
     RefreshProxy = require('./refresh_proxy');
 //require('./assets/css/sesosa.css');
 
@@ -15,12 +15,12 @@ function renderDetail(href){
     paramObj = $.extend({}, config.getDefaultParam(), qryObj);
     common.req.get(common.resolve(common.api.detail, paramObj)).done(function(data){
         app.renderDetail('.js-content', 'detail-tpl', 'slider-tpl', paramObj, data.results);
-        /*    setTimeout(function(){
-         new Slider({
-         el: '.sliders-wrapper',
-         padding: Math.ceil(window.rem2px(0.15))
-         })
-         }, 100)*/
+        setTimeout(function(){
+             new Slider({
+                el: '.sliders-wrapper',
+                padding: Math.ceil(window.rem2px(0.15))
+             })
+         }, 100)
         /*简介文字溢出处理*/
         var $ellipse = $('.ellipse'),
             $ellipseBtn = $('.ellipse-btn'),

@@ -12,7 +12,9 @@ function renderDetail(href){
     var url = href,
         idx = url.indexOf('?'),
         qryObj = common.formatQuery(url.substr(idx + 1)),paramObj;
+    delete qryObj.type
     paramObj = $.extend({}, config.getDefaultParam(), qryObj);
+    $('.js-content').html('');
     common.req.get(common.resolve(common.api.detail, paramObj)).done(function(data){
         app.renderDetail('.js-content', 'detail-tpl', 'slider-tpl', paramObj, data.results);
         setTimeout(function(){
@@ -33,6 +35,8 @@ function renderDetail(href){
             e.stopPropagation();
             $ellipse.toggleClass('active');
         })
+    }).fail(function(xml, err){
+        console.log(err)
     });
 }
 /*

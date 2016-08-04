@@ -7,9 +7,10 @@ var common = require('./common'),
     RefreshProxy = require('./refresh_proxy'),
     config = require('./config'),
     Toast = require('./toast'),
-    renderDetail = require('./detail');
-
+    renderDetail = require('./detail'),
+    Press = require('./press');
 require('./assets/css/sesosa.css');
+Press.add(['search-btn', 'detail-btn', 'item-btn']);
 
 var url = location.href,
     appGame = common.type.appGame,
@@ -25,7 +26,8 @@ var url = location.href,
     idx = url.indexOf('?'),
     qryObj = common.formatQuery(url.substr(idx + 1)),
     tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input'),
-    $pages = $('.page');
+    $pages = $('.page'),
+    initType = 'index' //初始显示的页面;
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
 
@@ -54,10 +56,10 @@ function search(paramObj){
          * param{String}tabName: tab对应的名称
          * */
         function addScroll(url, data, name, tabName){
-            var _data = data.results[tabName],
+            var _data = data.results && data.results[tabName] || {},
                 _header,
                 html = '<div class="none">您搜索的关键词没有相关搜索结果，谢谢！</div>',
-                d = $.extend({total: parseInt(_data.total, 10)}, paramObj);
+                d = $.extend({total: parseInt(_data.total || 0, 10)}, paramObj);
             if(d.total === 0){
                 tab.render(html, name);
                 return;
@@ -93,7 +95,7 @@ function search(paramObj){
 
         /*
          *搜索结果是游戏
-         *在游戏选项卡内容上天下下拉刷新
+         *在游戏选项卡内容上添加下拉刷新
          */
         if(isAppGame){
             activeTab = tabNames.game;
@@ -103,7 +105,7 @@ function search(paramObj){
         }
         /*
          *搜索结果是应用
-         *在应用选项卡内容上天下下拉刷新
+         *在应用选项卡内容上添加下拉刷新
          */
         if(isAppSoftWare){
             activeTab = tabNames.soft;
@@ -113,7 +115,7 @@ function search(paramObj){
         }
         /*
          *搜索结果是混排json
-         *在全部选项卡内容上天下下拉刷新
+         *在全部选项卡内容上添加下拉刷新
          */
         if(isAppGame && isAppSoftWare){
             activeTab = tabNames.all;
@@ -160,11 +162,11 @@ $(function(){
 
 
     /*初始加载*/
-    qryObj.t = qryObj.t || allApps;
+/*    qryObj.t = qryObj.t || allApps;
     if(qryObj.q){
         $searchInput.val(decodeURIComponent(qryObj.q));
         search(qryObj);
-    }
+    }*/
 
     /*点击开始查询*/
     $('.page-index .search-btn').on('touchend', function(e){
@@ -184,6 +186,7 @@ $(function(){
         }
         qryObj.q = val;
         qryObj.pid = 1;
+        qryObj.t = allApps;/*默认搜索全部*/
         refreshProxy.clear();
         tab.clear();
         search(qryObj);
@@ -203,16 +206,32 @@ $(function(){
     });
 
     $(document).delegate('.item', 'click', function(e){
-        e.preventDefault();
         if($(e.target).hasClass('item-btn')){
             return ;
         }
+        e.preventDefault();
         //e.preventDefault();
         switchPage('page-detail');
         renderDetail($(this).data('href'));
         //location.href = $(this).data('href');
     });
 
+    /*初始加载*/
+    qryObj.t = qryObj.t || allApps;
+    initType = (qryObj.type || '').trim();
+    if(initType){
+        delete qryObj.type
+    }
+    if(initType === 'detail'){
+        renderDetail(location.href);
+        switchPage('page-detail');
+    }else if(qryObj.q){
+        $searchInput.val(decodeURIComponent(qryObj.q));
+        search(qryObj);
+        switchPage('page-index');
+    }else{
+        switchPage('page-index');
+    }
+
     $('#container').show();
-    switchPage('page-index');
 });

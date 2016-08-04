@@ -18,7 +18,7 @@ function property(key){
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 var getLength = property('length');
 var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
-var host = '';//'http://10.9.14.60:8080';
+var host = '';//'http://localhost:8080';
 function isArrayLike(obj){
     var length = getLength(obj);
     return typeof  length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
@@ -114,7 +114,8 @@ module.exports =  {
         return obj
     },
     resolve: function(url, obj){
-        return url + '?' + this.queryParse(obj);
+        var qryStr = this.queryParse(obj);
+        return ~url.indexOf('?') ? (url  + '&' + qryStr) : (url + '?' + qryStr);
     },
     render: render,
     renderArray: renderArray,

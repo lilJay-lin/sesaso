@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test",
-    "dev": "webpack-dev-server --hot --inline --port 3300 --host 10.9.14.60",
+    "dev": "webpack-dev-server --hot --inline --port 3300 --host 10.9.14.67 ",
     "build": "webpack --progress --profile --colors --config webpack.product.config.js"
   },
   "keywords": [

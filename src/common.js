@@ -18,7 +18,7 @@ function property(key){
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 var getLength = property('length');
 var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
-var host = '';//'http://localhost:8080';
+var host = ''; //'http://localhost:8080';
 function isArrayLike(obj){
     var length = getLength(obj);
     return typeof  length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
@@ -145,7 +145,8 @@ module.exports =  {
     api: {
         search: host + '/cpasearch/Search',
         detail:　host + '/cpasearch/appContent',
-        download: host + '/cpasearch/download'
+        download: host + '/cpasearch/download',
+        recommend: host + '/cpasearch/commend'
     },
     goBack: function(){
         history.go(-1);

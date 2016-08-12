@@ -63,6 +63,28 @@
         </div>
     </div>
 </div>
+<template id="recommend-tpl">
+    <div class="recommend">
+        <div class="recommend-tip">
+            <p>很抱歉，没有找到<span class="light">“{keyword}”</span>的相关内容</p>
+            <div class="tips">
+                <div>
+                    建议您：
+                </div>
+                <div>
+                    <p>1. 看看输入文字是否有误</p>
+                    <p>2. 尝试搜索其他关键字</p>
+                </div>
+            </div>
+        </div>
+        <div class="recommend-hd">
+            为您推荐
+        </div>
+        <div class="recommend-bd">
+            {{list}}
+        </div>
+    </div>
+</template>
 <template id="item-tpl">
     <div class="item" data-id="{id}" target="_blank" data-href="{detail_url}">
         <img src="{logourl}" alt="">

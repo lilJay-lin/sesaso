@@ -20,6 +20,9 @@ $(function(){
         node = "tagName" in node ? node : node.parentNode;
         var  $el = $(node);
         while($el.length > 0){
+            if ($el.hasClass('ignore-pressed')){
+                return null
+            }
             if(is($el)){
                 return $el[0];
             }else{
@@ -61,14 +64,14 @@ $(function(){
         longTapTimeout = setTimeout(longTap, longTapDelay)
         prevEl = touch.el;
     }).on('touchmove', function(e){
-        if(!touch.el[0]){
+        if(!touch.el){
             return;
         }
     }).on('touchend', function(e){
         if(e.originalEvent){
             e=e.originalEvent;
         }
-        if(!touch.el.length){
+        if(!touch.el){
             return;
         }
         if (!touch.el.data("ignore-pressed")){

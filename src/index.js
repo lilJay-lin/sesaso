@@ -22,15 +22,30 @@ var url = location.href,
         game: 'game',
         soft: 'soft'
     },
-    tplId ='item-tpl',
+    //tplId ='item-tpl',
     idx = url.indexOf('?'),
     qryObj = common.formatQuery(url.substr(idx + 1)),
     tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input'),
     $pages = $('.page'),
+    recommends = {}, //推荐数据
+    recommendTpl = 'recommend-tpl',
     initType = 'index' //初始显示的页面;
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
 
+function renderApp(paramObj, data){
+    var tplId ='item-tpl',
+    _header = (function(obj){
+        return $.extend({}, obj, {
+            'f': paramObj.f,
+            'sessionId': paramObj.sessionId,
+            'D': paramObj.D,
+            'q': paramObj.q,
+            't': paramObj.t
+        });
+    })(data.header || {});
+    return app.renderApp(tplId, _header, data.list);
+}
 function search(paramObj){
     paramObj = $.extend({}, defaultParam, paramObj);
     /*refreshProxy.clear();
@@ -61,10 +76,12 @@ function search(paramObj){
                 html = '<div class="none">您搜索的关键词没有相关搜索结果，谢谢！</div>',
                 d = $.extend({total: parseInt(_data.total || 0, 10)}, paramObj);
             if(d.total === 0){
-                tab.render(html, name);
+                recommends.keyword = paramObj.q
+                tab.render(app.render(recommendTpl, recommends), name);
+                $('.recommend-tip').show();
                 return;
             }
-            _header = (function(obj){
+/*            _header = (function(obj){
                 return $.extend({}, obj, {
                     'f': paramObj.f,
                     'sessionId': paramObj.sessionId,
@@ -73,8 +90,11 @@ function search(paramObj){
                     't': paramObj.t
                 });
             })(data.results.header || {});
-            html = app.renderApp(tplId, _header, _data.list);
-            tab.render(html, name);
+            html = app.renderApp(tplId, _header, _data.list);*/
+            tab.render(renderApp(paramObj, {
+                header: data.results.header,
+                list: _data.list
+            }), name);
             /*
              * render: 滚动的刷新函数
              * */
@@ -87,8 +107,8 @@ function search(paramObj){
                 render: function(res, name){
                     var data = name === tabNames.all ? res[result] : name === tabNames.game ? res[appGame] : res[appSoftWare];
                     //console.log(_header);
-                    var html = app.renderApp(tplId, _header, data.list);
-                    tab.render(html, name);
+                    //var html = app.renderApp(tplId, _header, data.list);
+                    tab.render(renderApp(paramObj, _data), name);
                 }
             });
         };
@@ -123,7 +143,7 @@ function search(paramObj){
             paramObj.mixed = 0;
             addScroll(searchUrl, data, activeTab, result);
         }
-        tab.switchTab(activeTab);
+        tab.switchTab(tab.active);
         refreshProxy.forceStart(activeTab);
     })
 }
@@ -141,6 +161,27 @@ function switchPage(page){
     $('.' + page).show();
 }
 
+function getSearchType(name){
+    return name === tabNames.game ? appGame : name === tabNames.soft ? appSoftWare : allApps
+}
+
+/*
+* 请求推举数据
+* */
+function reqRecommends(obj){
+    var params = {
+            t: allApps,
+            f: 'C',
+            imei: '',
+            channelid: '',
+            phone: '',
+            storeId: ''
+        };
+    $.each(params, function(key){
+        params[key] = obj[key] || params[key]
+    });
+    return common.req.get(common.resolve(common.api.recommend, params))
+}
 $(function(){
     /*toast实例化*/
     toast = new Toast({
@@ -230,6 +271,21 @@ $(function(){
         search(qryObj);
         switchPage('page-index');
     }else{
+        reqRecommends(qryObj).done(function(res){
+            if(!res || !res.results){
+                return
+            }
+            var list = res.results.list, html;
+            if(list && list.length > 0){
+                recommends = {
+                    list: renderApp(qryObj, res.results)
+                };
+                html = app.render(recommendTpl, recommends);
+                $.each(tabNames, function(key, name){
+                    tab.render(html, name)
+                })
+            }
+        })
         switchPage('page-index');
     }
 

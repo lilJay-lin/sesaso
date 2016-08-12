@@ -7,7 +7,7 @@ var detailParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "ch
 var APP_SIZE_SPLIT = /(\d+(\.\d+)?)KB/;
 module.exports = {
     renderApp: function (id, header, data) {
-        var me = this, tpl = me.getTplById(id);
+        var me = this/*, tpl = me.getTplById(id)*/;
         if($.isArray(data) && data.length > 0){
             var arr = data;
             if(arr == null || !$.isArray(arr)){
@@ -23,18 +23,18 @@ module.exports = {
                 obj.download = me.computeDownload(obj.download, 1);
                 obj.appsize = me.computeAppSize(obj.appsize);
                 obj._order = i + 1;
-                html += common.render(tpl, obj);
+                html += me.render(id, obj);
             })
             return html;
         }else {
-            return common.render(tpl, data)
+            return this.render(id, data)
         }
     },
     renderDetail: function (el, detailId, sliderId, header, data){
         var me = this,
             $el = $(el),
-            detailTpl = me.getTplById(detailId),
-            sliderTpl = me.getTplById(sliderId),
+            //detailTpl = me.getTplById(detailId),
+            //sliderTpl = me.getTplById(sliderId),
             detailHtml, sliderHtml;
         header.contentid = data.id;
         data.download_url = common.resolve(common.api.download, me.clone(downloadParam, header));
@@ -42,11 +42,22 @@ module.exports = {
         data.appsize = me.computeAppSize(data.appsize);
         data.updatedate = data.updatedate.split(/\s+/)[0];
         data.score = me.computeAppScore(header.f);
-        detailHtml = common.render(detailTpl, data);
-        sliderHtml = common.renderArray(sliderTpl, data.screenurl || []);
+        detailHtml = me.render(detailId, data);
+        sliderHtml = me.renderArray(sliderId, data.screenurl || []);
         $el.html(detailHtml).find('.sliders').html(sliderHtml);
     },
+    render: function(id, data){
+        var me = this, tpl = me.getTplById(id);
+        return common.render(tpl, data)
+    },
+    renderArray: function(id, data){
+        var me = this, tpl = me.getTplById(id);
+        return common.renderArray(tpl, data)
+    },
     computeDownload: function(d, change){
+        if(!d){
+            return
+        }
         d = d ?  parseInt(d, 10) : 1000;
         d = d < 1000 ? 1000 + d : d;
         var t = d, ft;
@@ -57,6 +68,9 @@ module.exports = {
         return t;
     },
     computeAppSize: function (d){
+        if(!d){
+            return
+        }
         var size = d || 0;
         var match = d.match(APP_SIZE_SPLIT);
         if(match){

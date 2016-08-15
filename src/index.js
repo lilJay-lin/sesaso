@@ -169,18 +169,7 @@ function getSearchType(name){
 * 请求推举数据
 * */
 function reqRecommends(obj){
-    var params = {
-            t: allApps,
-            f: 'C',
-            imei: '',
-            channelid: '',
-            phone: '',
-            storeId: ''
-        };
-    $.each(params, function(key){
-        params[key] = obj[key] || params[key]
-    });
-    return common.req.get(common.resolve(common.api.recommend, params))
+    return common.req.get(common.resolve(common.api.recommend, obj))
 }
 $(function(){
     /*toast实例化*/
@@ -271,14 +260,28 @@ $(function(){
         search(qryObj);
         switchPage('page-index');
     }else{
-        reqRecommends(qryObj).done(function(res){
+        /*
+        * 设置默认参数
+        * */
+        var params = {
+            t: allApps,
+            f: 'C',
+            imei: '',
+            channelid: '',
+            phone: '',
+            storeId: ''
+        };
+        $.each(params, function(key){
+            params[key] = qryObj[key] || params[key]
+        });
+        reqRecommends(params).done(function(res){
             if(!res || !res.results){
                 return
             }
             var list = res.results.list, html;
             if(list && list.length > 0){
                 recommends = {
-                    list: renderApp(qryObj, res.results)
+                    list: renderApp(params, res.results)
                 };
                 html = app.render(recommendTpl, recommends);
                 $.each(tabNames, function(key, name){

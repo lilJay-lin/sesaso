@@ -104,7 +104,7 @@ function search(paramObj){
                     //var html = app.renderApp(tplId, _header, data.list);
                     var obj = $.extend({}, paramObj, props);
                     //console.log(obj)
-                    tab.render(renderApp(obj, _data), name);
+                    tab.render(renderApp(obj, data), name);
                 }
             });
         };

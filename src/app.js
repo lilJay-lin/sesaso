@@ -90,7 +90,7 @@ module.exports = {
         for(; i < len; i++){
             key = param[i];
             value = target[key];
-            if(target.hasOwnProperty(key) && !!value){
+            if(target.hasOwnProperty(key) && value !== undefined && value !== null && value !== ''){
                 obj[key] = value;
             }
         }

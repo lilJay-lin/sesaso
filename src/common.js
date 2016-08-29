@@ -18,7 +18,7 @@ function property(key){
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 var getLength = property('length');
 var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
-var host = '';//http://localhost:8080';
+var host = ''; //'http://localhost:8080';
 function isArrayLike(obj){
     var length = getLength(obj);
     return typeof  length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
@@ -36,9 +36,7 @@ function render(template, context) {
             return word.replace('\\', '');
         }
 
-        var variables = token.replace(/\s/g, '').split('.');
-        var currentObject = context;
-        var i, length, variable;
+        var variables = token.replace(/\s/g, '').split('.'), currentObject = contexti, length, variable;
 
         for (i = 0, length = variables.length; i < length; ++i) {
             variable = variables[i];
@@ -75,7 +73,7 @@ function each(obj, iteratee, context){
             cb(obj[i], i, obj);
         }
     }else{
-        var keys = Object.keys(obj),key;
+        var keys = Object.keys(obj), key;
         for(i = 0, len = keys.length; i < len; i++){
             key = keys[i];
             if(hasOwnProperty.call(obj, key)){
@@ -88,10 +86,9 @@ module.exports =  {
     property: property,
     each: each,
     queryParse: function(obj){
-        var str = ''
-        var u
+        var str = '', u;
         this.each(obj, function (value, key) {
-            if(!!value){
+            if(value !== undefined && value !== null && value !== ''){
                 u = key + '=' + encodeURIComponent(value)
                 str += str === '' ?  u : ('&' + u)
             }
@@ -99,12 +96,11 @@ module.exports =  {
         return str
     },
     formatQuery: function(str){
-        var obj = {}
+        var obj = {};
         if(str.trim() === ''){
             return obj
         }
-        var regex = /([^=]*)=(.*)$/i;
-        var arr = str.split('&')
+        var regex = /([^=]*)=(.*)$/i, arr = str.split('&');
         this.each(arr, function(value, key){
             var m = regex.exec(value)
             if(m && m.length > 2){

@@ -54,8 +54,8 @@ function search(paramObj){
          * TabContent首屏数据初始化，添加refresh
          */
         var isAppGame = type.indexOf(common.type.appGame) > -1,
-            isAppSoftWare = type.indexOf(common.type.appSoftWare) > -1,
-            activeTab = 'all';
+            isAppSoftWare = type.indexOf(common.type.appSoftWare) > -1/*,
+            activeTab = 'all'*/;
 
         /*
          * 首屏渲染并添加refresh,通过代理添加不同TAB上的scroll下拉刷新事件
@@ -102,7 +102,8 @@ function search(paramObj){
                     var data = name === tabNames.all ? res[result] : name === tabNames.game ? res[appGame] : res[appSoftWare];
                     //console.log(_header);
                     //var html = app.renderApp(tplId, _header, data.list);
-                    var obj = $.extend({}, paramObj, props);
+                    var obj = $.extend({}, paramObj);
+                    $.extend(obj, props);
                     //console.log(obj)
                     tab.render(renderApp(obj, data), name);
                 }
@@ -114,33 +115,33 @@ function search(paramObj){
          *在游戏选项卡内容上添加下拉刷新
          */
         if(isAppGame){
-            activeTab = tabNames.game;
+            /*activeTab = tabNames.game;*/
             paramObj.t = appGame;
             paramObj.mixed = 1;
-            addScroll(searchUrl, data, activeTab, appGame);
+            addScroll(searchUrl, data, tabNames.game, appGame);
         }
         /*
          *搜索结果是应用
          *在应用选项卡内容上添加下拉刷新
          */
         if(isAppSoftWare){
-            activeTab = tabNames.soft;
+            /*activeTab = tabNames.soft;*/
             paramObj.t = appSoftWare;
             paramObj.mixed = 1;
-            addScroll(searchUrl, data, activeTab, appSoftWare);
+            addScroll(searchUrl, data, tabNames.soft, appSoftWare);
         }
         /*
          *搜索结果是混排json
          *在全部选项卡内容上添加下拉刷新
          */
         if(isAppGame && isAppSoftWare){
-            activeTab = tabNames.all;
+            /*activeTab = tabNames.all;*/
             paramObj.t = allApps;
             paramObj.mixed = 0;
-            addScroll(searchUrl, data, activeTab, result);
+            addScroll(searchUrl, data, tabNames.all, result);
         }
         tab.switchTab(tab.active);
-        refreshProxy.forceStart(activeTab);
+        refreshProxy.forceStart(tab.active);
     })
 }
 function clearSearch(all){
@@ -272,6 +273,7 @@ $(function(){
             params[key] = qryObj[key] || params[key]
         });*/
         var params = $.extend({}, defaultParam, qryObj);
+        params.act = 1;
         reqRecommends(params).done(function(res){
             if(!res || !res.results){
                 return

@@ -36,7 +36,7 @@ function render(template, context) {
             return word.replace('\\', '');
         }
 
-        var variables = token.replace(/\s/g, '').split('.'), currentObject = contexti, length, variable;
+        var variables = token.replace(/\s/g, '').split('.'), currentObject = context, i, length, variable;
 
         for (i = 0, length = variables.length; i < length; ++i) {
             variable = variables[i];

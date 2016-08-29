@@ -3,7 +3,7 @@
  */
 var common = require('./common');
 var cfg = require('./config');
-var detailParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q"], downloadParam = ["t", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q"];
+var detailParam = downloadParam = ["t", "storeId", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q", "act", "pid"];
 var APP_SIZE_SPLIT = /(\d+(\.\d+)?)KB/;
 module.exports = {
     renderApp: function (id, header, data) {

@@ -44,9 +44,12 @@ Refresh.prototype = {
             me.destroy();
             data.pid++ ;
             if(data.pid <= me.pageCount){
+                var pid = data.pid;
                 common.req.get(common.resolve(me.url, data)).done(function(data){
                     var name = me.name;
-                    me.render(data.results, name);
+                    me.render(data.results, name, {
+                        pid: pid
+                    });
                     me.start();
                 })
             }else{

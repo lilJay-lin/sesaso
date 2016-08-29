@@ -36,13 +36,7 @@ refreshProxy = new RefreshProxy();
 function renderApp(paramObj, data){
     var tplId ='item-tpl',
     _header = (function(obj){
-        return $.extend({}, obj, {
-            'f': paramObj.f,
-            'sessionId': paramObj.sessionId,
-            'D': paramObj.D,
-            'q': paramObj.q,
-            't': paramObj.t
-        });
+        return $.extend({}, paramObj, obj);
     })(data.header || {});
     return app.renderApp(tplId, _header, data.list);
 }
@@ -104,11 +98,13 @@ function search(paramObj){
                 name: name,
                 container: '.tab-content li[data-name="' + name + '"]',
                 content: '.items',
-                render: function(res, name){
+                render: function(res, name, props){
                     var data = name === tabNames.all ? res[result] : name === tabNames.game ? res[appGame] : res[appSoftWare];
                     //console.log(_header);
                     //var html = app.renderApp(tplId, _header, data.list);
-                    tab.render(renderApp(paramObj, _data), name);
+                    var obj = $.extend({}, paramObj, props);
+                    //console.log(obj)
+                    tab.render(renderApp(obj, _data), name);
                 }
             });
         };
@@ -216,6 +212,7 @@ $(function(){
         }
         qryObj.q = val;
         qryObj.pid = 1;
+        qryObj.act = 0;
         qryObj.t = allApps;/*默认搜索全部*/
         refreshProxy.clear();
         tab.clear();
@@ -259,11 +256,11 @@ $(function(){
         $searchInput.val(decodeURIComponent(qryObj.q));
         search(qryObj);
         switchPage('page-index');
-    }else{
+    }else{/*默认推荐展示*/
         /*
         * 设置默认参数
         * */
-        var params = {
+        /*var params = {
             t: allApps,
             f: 'C',
             imei: '',
@@ -273,7 +270,8 @@ $(function(){
         };
         $.each(params, function(key){
             params[key] = qryObj[key] || params[key]
-        });
+        });*/
+        var params = $.extend({}, defaultParam, qryObj);
         reqRecommends(params).done(function(res){
             if(!res || !res.results){
                 return
@@ -281,7 +279,7 @@ $(function(){
             var list = res.results.list, html;
             if(list && list.length > 0){
                 recommends = {
-                    list: renderApp(params, res.results)
+                    list: renderApp($.extend(params, res.results.header), res.results)
                 };
                 html = app.render(recommendTpl, recommends);
                 $.each(tabNames, function(key, name){

@@ -12,7 +12,8 @@ var _defaultParam = {
     mixed: 0,
     sessionId: '',/*用户会话ID*/
     sortGoodsNum: this.ps,/*MO混排结果中各分类返回的结果数*/
-    act: 0
+    act: 0,
+    storeId: ''
 };
 module.exports = {
     pageSize: 4,

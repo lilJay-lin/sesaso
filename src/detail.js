@@ -16,7 +16,7 @@ function renderDetail(href){
     paramObj = $.extend({}, config.getDefaultParam(), qryObj);
     $('.js-content').html('');
     common.req.get(common.resolve(common.api.detail, paramObj)).done(function(data){
-        app.renderDetail('.js-content', 'detail-tpl', 'slider-tpl', paramObj, data.results);
+            app.renderDetail('.js-content', 'detail-tpl', 'slider-tpl', paramObj, data.results);
         setTimeout(function(){
              new Slider({
                 el: '.sliders-wrapper',

@@ -33,11 +33,11 @@ var url = location.href,
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
 
-function renderApp(paramObj, data){
-    var tplId ='item-tpl',
-    _header = (function(obj){
+function renderApp(_header, data){
+    var tplId ='item-tpl';
+/*    _header = (function(obj){
         return $.extend({}, paramObj, obj);
-    })(data.header || {});
+    })(data.header || {});*/
     return app.renderApp(tplId, _header, data.list);
 }
 function search(paramObj){
@@ -85,8 +85,10 @@ function search(paramObj){
                 });
             })(data.results.header || {});
             html = app.renderApp(tplId, _header, _data.list);*/
-            tab.render(renderApp(paramObj, {
-                header: data.results.header,
+            _header = (function(obj){
+                return $.extend({}, paramObj, obj);
+            })(data.results.header || {});
+            tab.render(renderApp(_header, {
                 list: _data.list
             }), name);
             /*
@@ -102,7 +104,7 @@ function search(paramObj){
                     var data = name === tabNames.all ? res[result] : name === tabNames.game ? res[appGame] : res[appSoftWare];
                     //console.log(_header);
                     //var html = app.renderApp(tplId, _header, data.list);
-                    var obj = $.extend({}, paramObj);
+                    var obj = $.extend({}, _header);
                     $.extend(obj, props);
                     //console.log(obj)
                     tab.render(renderApp(obj, data), name);

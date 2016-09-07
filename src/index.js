@@ -85,7 +85,7 @@ function search(paramObj){
                 * storeId暂时写死
                 * */
                 _header.storeId = (function(){
-                    return tabName == tabNames.all ? 1450535735 : tabName === tabNames.game ? 1450535740 : 1450535742;
+                    return name == tabNames.all ? 1450535735 : name === tabNames.game ? 1450535740 : 1450535742;
                 }());
                 reqRecommends(_header, tab, [name], paramObj.q).done(function(){
                     $('.recommend-tip').show();

@@ -80,9 +80,16 @@ function search(paramObj){
                 return $.extend({}, paramObj, obj);
             })(data.results.header || {});
             if(d.total === 0){
-                _header.t = nameRelType[name];
-                reqRecommends(_header, tab, [name]);
-                $('.recommend-tip').show();
+                _header.t = allApps;
+                /*
+                * storeId暂时写死
+                * */
+                _header.storeId = (function(){
+                    return tabName == tabNames.all ? 1450535735 : tabName === tabNames.game ? 1450535740 : 1450535742;
+                }());
+                reqRecommends(_header, tab, [name], paramObj.q).done(function(){
+                    $('.recommend-tip').show();
+                });
                 deferred.resolve();
                 return;
             }
@@ -167,22 +174,29 @@ function getSearchType(name){
 /*
 * 请求推荐数据
 * */
-function reqRecommends(params, tab, tabNames){
+function reqRecommends(params, tab, tabNames, keyword){
+    keyword = keyword || ''
+    var deferred = $.Deferred();
     params.act = 1;
     common.req.get(common.resolve(common.api.recommend, params)).done(function(res){
         if(!res || !res.results){
-            return
+            res = {
+                results: {
+                    list: []
+                }
+            }
         }
-        var list = res.results.list, html;
-        if(list && list.length > 0){
-            html = app.render('recommend-tpl', {
-                list: renderApp($.extend(params, res.results.header), res.results)
-            });
-            $.each(tabNames, function(key, name){
-                tab.render(html, name)
-            })
-        }
+        var list = res.results.list || [], html;
+        html = app.render('recommend-tpl', {
+            keyword: keyword,
+            list: renderApp($.extend(params, res.results.header), res.results)
+        });
+        $.each(tabNames, function(key, name){
+            tab.render(html, name)
+        });
+        deferred.resolve();
     });
+    return deferred
 }
 $(function(){
     /*toast实例化*/

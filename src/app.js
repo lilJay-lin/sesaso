@@ -8,24 +8,26 @@ var APP_SIZE_SPLIT = /(\d+(\.\d+)?)KB/;
 module.exports = {
     renderApp: function (id, header, data) {
         var me = this/*, tpl = me.getTplById(id)*/;
-        if($.isArray(data) && data.length > 0){
-            var arr = data;
-            if(arr == null || !$.isArray(arr)){
-                return template;
+        if($.isArray(data)){
+            if(data.length > 0){
+                var arr = data;
+                if(arr == null || !$.isArray(arr)){
+                    return template;
+                }
+                var html = '', obj = {}, _header = $.extend({}, header);
+                $.each(arr, function(i){
+                    obj = this;
+                    _header.t = obj.category || header.t;
+                    _header.contentid = obj.id;
+                    obj.detail_url = common.resolve(cfg.detailHtml, me.clone(detailParam, _header));
+                    obj.download_url = common.resolve(common.api.download, me.clone(downloadParam, _header));
+                    obj.download = me.computeDownload(obj.download, 1);
+                    obj.appsize = me.computeAppSize(obj.appsize);
+                    obj._order = i + 1;
+                    html += me.render(id, obj);
+                })
+                return html;
             }
-            var html = '', obj = {}, _header = $.extend({}, header);
-            $.each(arr, function(i){
-                obj = this;
-                _header.t = obj.category || header.t;
-                _header.contentid = obj.id;
-                obj.detail_url = common.resolve(cfg.detailHtml, me.clone(detailParam, _header));
-                obj.download_url = common.resolve(common.api.download, me.clone(downloadParam, _header));
-                obj.download = me.computeDownload(obj.download, 1);
-                obj.appsize = me.computeAppSize(obj.appsize);
-                obj._order = i + 1;
-                html += me.render(id, obj);
-            })
-            return html;
         }else {
             return this.render(id, data)
         }

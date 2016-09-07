@@ -22,13 +22,19 @@ var url = location.href,
         game: 'game',
         soft: 'soft'
     },
+    nameRelType = (function(){
+        var obj = {};
+        obj[tabNames.all] = allApps;
+        obj[tabNames.game] = appGame;
+        obj[tabNames.soft] = appSoftWare;
+        return obj;
+    })(),
     //tplId ='item-tpl',
     idx = url.indexOf('?'),
     qryObj = common.formatQuery(url.substr(idx + 1)),
     tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input'),
     $pages = $('.page'),
     recommends = {}, //推荐数据
-    recommendTpl = 'recommend-tpl',
     initType = 'index' //初始显示的页面;
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
@@ -41,6 +47,7 @@ function renderApp(_header, data){
     return app.renderApp(tplId, _header, data.list);
 }
 function search(paramObj){
+    var deferred = $.Deferred();
     paramObj = $.extend({}, defaultParam, paramObj);
     /*refreshProxy.clear();
     tab && tab.clear();*/
@@ -64,30 +71,22 @@ function search(paramObj){
          * param{String}name: 分类标志名称
          * param{String}tabName: tab对应的名称
          * */
-        function addScroll(url, data, name, tabName){
+        function addScroll(url, data, name, tabName)   {
             var _data = data.results && data.results[tabName] || {},
                 _header,
                 html = '<div class="none">您搜索的关键词没有相关搜索结果，谢谢！</div>',
                 d = $.extend({total: parseInt(_data.total || 0, 10)}, paramObj);
-            if(d.total === 0){
-                recommends.keyword = paramObj.q
-                tab.render(app.render(recommendTpl, recommends), name);
-                $('.recommend-tip').show();
-                return;
-            }
-/*            _header = (function(obj){
-                return $.extend({}, obj, {
-                    'f': paramObj.f,
-                    'sessionId': paramObj.sessionId,
-                    'D': paramObj.D,
-                    'q': paramObj.q,
-                    't': paramObj.t
-                });
-            })(data.results.header || {});
-            html = app.renderApp(tplId, _header, _data.list);*/
             _header = (function(obj){
                 return $.extend({}, paramObj, obj);
             })(data.results.header || {});
+            if(d.total === 0){
+                _header.t = nameRelType[name];
+                reqRecommends(_header, tab, [name]);
+                $('.recommend-tip').show();
+                deferred.resolve();
+                return;
+            }
+            deferred.resolve();
             tab.render(renderApp(_header, {
                 list: _data.list
             }), name);
@@ -144,7 +143,8 @@ function search(paramObj){
         }
         tab.switchTab(tab.active);
         refreshProxy.forceStart(tab.active);
-    })
+    });
+    return deferred
 }
 function clearSearch(all){
     all && $searchInput.val('');
@@ -165,10 +165,24 @@ function getSearchType(name){
 }
 
 /*
-* 请求推举数据
+* 请求推荐数据
 * */
-function reqRecommends(obj){
-    return common.req.get(common.resolve(common.api.recommend, obj))
+function reqRecommends(params, tab, tabNames){
+    params.act = 1;
+    common.req.get(common.resolve(common.api.recommend, params)).done(function(res){
+        if(!res || !res.results){
+            return
+        }
+        var list = res.results.list, html;
+        if(list && list.length > 0){
+            html = app.render('recommend-tpl', {
+                list: renderApp($.extend(params, res.results.header), res.results)
+            });
+            $.each(tabNames, function(key, name){
+                tab.render(html, name)
+            })
+        }
+    });
 }
 $(function(){
     /*toast实例化*/
@@ -205,12 +219,10 @@ $(function(){
             return;
         }
         $el.data('lock', 1);
-        setTimeout(function(){
-            $el.data('lock', 0)
-        }, 1000);
         var val = $searchInput.val().trim();
         if(val === ''){
             toast.show('请输入名称搜索');
+            $el.data('lock', 0);
             return;
         }
         qryObj.q = val;
@@ -219,7 +231,9 @@ $(function(){
         qryObj.t = allApps;/*默认搜索全部*/
         refreshProxy.clear();
         tab.clear();
-        search(qryObj);
+        search(qryObj).done(function(){
+            $el.data('lock', 0)
+        });
     });
 
     /*
@@ -275,22 +289,7 @@ $(function(){
             params[key] = qryObj[key] || params[key]
         });*/
         var params = $.extend({}, defaultParam, qryObj);
-        params.act = 1;
-        reqRecommends(params).done(function(res){
-            if(!res || !res.results){
-                return
-            }
-            var list = res.results.list, html;
-            if(list && list.length > 0){
-                recommends = {
-                    list: renderApp($.extend(params, res.results.header), res.results)
-                };
-                html = app.render(recommendTpl, recommends);
-                $.each(tabNames, function(key, name){
-                    tab.render(html, name)
-                })
-            }
-        })
+        reqRecommends(params, tab, tabNames);
         switchPage('page-index');
     }
 

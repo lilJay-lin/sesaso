@@ -8,9 +8,15 @@ var common = require('./common'),
     config = require('./config'),
     Toast = require('./toast'),
     renderDetail = require('./detail'),
-    Press = require('./press');
+    Press = require('./press'),
+    Recommend = require('./recommend');
 require('./assets/css/sesosa.css');
 Press.add(['search-btn', 'detail-btn', 'item-btn']);
+
+/*
+* 初始化设置storeId
+* */
+Recommend.setStoreIds();
 
 var url = location.href,
     appGame = common.type.appGame,
@@ -34,7 +40,6 @@ var url = location.href,
     qryObj = common.formatQuery(url.substr(idx + 1)),
     tab, defaultParam, refreshProxy, toast, searchUrl, type, $searchInput = $('.search-input'),
     $pages = $('.page'),
-    recommends = {}, //推荐数据
     initType = 'index' //初始显示的页面;
 /*实例化RefreshProxy代理*/
 refreshProxy = new RefreshProxy();
@@ -81,13 +86,7 @@ function search(paramObj){
             })(data.results.header || {});
             if(d.total === 0){
                 _header.t = allApps;
-                /*
-                * storeId暂时写死
-                * */
-                _header.storeId = (function(){
-                    return name == tabNames.all ? 1450535735 : name === tabNames.game ? 1450535740 : 1450535742;
-                }());
-                reqRecommends(_header, tab, [name], paramObj.q).done(function(){
+                Recommend.reqRecommends(renderApp, _header, tab, name, paramObj.q).done(function(){
                     $('.recommend-tip').show();
                 });
                 deferred.resolve();
@@ -169,34 +168,6 @@ function switchPage(page){
 
 function getSearchType(name){
     return name === tabNames.game ? appGame : name === tabNames.soft ? appSoftWare : allApps
-}
-
-/*
-* 请求推荐数据
-* */
-function reqRecommends(params, tab, tabNames, keyword){
-    keyword = keyword || ''
-    var deferred = $.Deferred();
-    params.act = 1;
-    common.req.get(common.resolve(common.api.recommend, params)).done(function(res){
-        if(!res || !res.results){
-            res = {
-                results: {
-                    list: []
-                }
-            }
-        }
-        var list = res.results.list || [], html;
-        html = app.render('recommend-tpl', {
-            keyword: keyword,
-            list: renderApp($.extend(params, res.results.header), res.results)
-        });
-        $.each(tabNames, function(key, name){
-            tab.render(html, name)
-        });
-        deferred.resolve();
-    });
-    return deferred
 }
 $(function(){
     /*toast实例化*/
@@ -303,7 +274,9 @@ $(function(){
             params[key] = qryObj[key] || params[key]
         });*/
         var params = $.extend({}, defaultParam, qryObj);
-        reqRecommends(params, tab, tabNames);
+        common.each(tabNames, function(name){
+            Recommend.reqRecommends(renderApp, params, tab, name);
+        });
         switchPage('page-index');
     }
 

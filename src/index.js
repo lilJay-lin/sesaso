@@ -201,12 +201,11 @@ $(function(){
     /*
     * 回车搜索
     * */
-    $('.page-index .search-input').on('keypress', function(e){
-        if(e.keyCode === 13){
-            e.preventDefault();
-            var $el = $('.page-index .search-btn');
-            searchEvent($el);
-        }
+    $('#form').on('submit', function(e){
+        e.preventDefault();
+        var $el = $('.page-index .search-btn');
+        searchEvent($el);
+        return false;
     })
     /*点击开始查询*/
     $('.page-index .search-btn').on('touchend', function(e){

@@ -180,7 +180,7 @@ $(function(){
     /*选项卡实例化*/
     tab = new Tab({
         el: '.tab-wrapper',
-        active: 'all'
+        active: qryObj.tab && tabNames[qryObj.tab] ? qryObj.tab : 'all'
     });
     tab.on('tab.switch', function (e, name) {
         refreshProxy.start(tab.active)

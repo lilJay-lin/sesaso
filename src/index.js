@@ -89,10 +89,10 @@ function search(paramObj){
                 Recommend.reqRecommends(renderApp, _header, tab, name, paramObj.q).done(function(){
                     $('.recommend-tip').show();
                 });
-                deferred.resolve();
+                /*deferred.resolve();*/
                 return;
             }
-            deferred.resolve();
+            /*deferred.resolve();*/
             tab.render(renderApp(_header, {
                 list: _data.list
             }), name);
@@ -149,6 +149,8 @@ function search(paramObj){
         }
         tab.switchTab(tab.active);
         refreshProxy.forceStart(tab.active);
+    }).always(function(){
+        deferred.resolve();
     });
     return deferred
 }
@@ -196,10 +198,23 @@ $(function(){
         search(qryObj);
     }*/
 
+    /*
+    * 回车搜索
+    * */
+    $('.page-index .search-input').on('keypress', function(e){
+        if(e.keyCode === 13){
+            e.preventDefault();
+            var $el = $('.page-index .search-btn');
+            searchEvent($el);
+        }
+    })
     /*点击开始查询*/
     $('.page-index .search-btn').on('touchend', function(e){
         e.preventDefault();
         var $el = $(this);
+        searchEvent($el);
+    });
+    function searchEvent($el){
         if($el.data('lock')){
             return;
         }
@@ -216,10 +231,10 @@ $(function(){
         qryObj.t = allApps;/*默认搜索全部*/
         refreshProxy.clear();
         tab.clear();
-        search(qryObj).done(function(){
-            $el.data('lock', 0)
+        search(qryObj).then(function(){
+            $el.data('lock', 0);
         });
-    });
+    }
 
     /*
     * 点击返回按钮显示搜索主界面

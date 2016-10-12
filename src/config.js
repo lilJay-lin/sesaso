@@ -17,7 +17,7 @@ var _defaultParam = {
 };
 module.exports = {
     pageSize: 4,
-    detailHtml: '/index.html?type=detail',
+    detailHtml: './index.html?type=detail',
     /*设置defaultParam*/
     set: function(name, value){
         _defaultParam[name] = value

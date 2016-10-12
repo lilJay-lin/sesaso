@@ -2,7 +2,7 @@
  * Created by linxiaojie on 2016/6/14.
  */
 let expect = require('chai').expect;
-let app = require('../src/app');
+let app = require('../src/lib/app');
 
 describe("app测试", function (){
     it('#app测试computeDownload', function(){

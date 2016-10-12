@@ -2,7 +2,7 @@
  * Created by linxiaojie on 2016/6/7.
  */
 var common = require('./common');
-var cfg = require('./config');
+var cfg = require('./../config');
 var detailParam = downloadParam = ["t", "storeId", "contentid", "f", "D", "sessionId", "phone", "imei", "channelid", "q", "act", "pid"];
 var APP_SIZE_SPLIT = /(\d+(\.\d+)?)KB/;
 module.exports = {

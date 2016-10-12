@@ -1,11 +1,11 @@
 /**
  * Created by linxiaojie on 2016/6/9.
  */
-var common = require('./common'),
+var common = require('./lib/common'),
     config = require('./config')
-    app = require('./app'),
-    Slider = require('./slider'),
-    RefreshProxy = require('./refresh_proxy');
+    app = require('./lib/app'),
+    Slider = require('./lib/slider'),
+    RefreshProxy = require('./lib/refresh_proxy');
 //require('./assets/css/sesosa.css');
 
 function renderDetail(href){

@@ -2,7 +2,7 @@
  * Created by linxiaojie on 2016/6/3.
  */
 let expect = require('chai').expect
-let common = require('../src/common')
+let common = require('../src/lib/common')
 describe('common测试', function(){
     describe('queryParse(object)测试', function(){
         it('参数obj所有key值不为空', function(){

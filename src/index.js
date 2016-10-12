@@ -1,15 +1,15 @@
 /**
  * Created by linxiaojie on 2016/6/9.
  */
-var common = require('./common'),
-    app = require('./app'),
-    Tab = require('./tab'),
-    RefreshProxy = require('./refresh_proxy'),
+var common = require('./lib/common'),
+    app = require('./lib/app'),
+    Tab = require('./lib/tab'),
+    RefreshProxy = require('./lib/refresh_proxy'),
     config = require('./config'),
-    Toast = require('./toast'),
+    Toast = require('./lib/toast'),
     renderDetail = require('./detail'),
-    Press = require('./press'),
-    Recommend = require('./recommend');
+    Press = require('./lib/press'),
+    Recommend = require('./lib/recommend');
 require('./assets/css/sesosa.css');
 Press.add(['search-btn', 'detail-btn', 'item-btn']);
 
@@ -86,7 +86,7 @@ function search(paramObj){
             })(data.results.header || {});
             if(d.total === 0){
                 _header.t = allApps;
-                Recommend.reqRecommends(renderApp, _header, tab, name, paramObj.q).done(function(){
+                Recommend.renderRecommends(renderApp, _header, tab, name, paramObj.q).done(function(){
                     $('.recommend-tip').show();
                 });
                 /*deferred.resolve();*/
@@ -289,7 +289,7 @@ $(function(){
         });*/
         var params = $.extend({}, defaultParam, qryObj);
         common.each(tabNames, function(name){
-            Recommend.reqRecommends(renderApp, params, tab, name);
+            Recommend.renderRecommends(renderApp, params, tab, name);
         });
         switchPage('page-index');
     }

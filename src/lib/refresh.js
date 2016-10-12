@@ -3,7 +3,7 @@
  * @param{Object}
  */
 var common = require('./common');
-var cfg = require('./config');
+var cfg = require('./../config');
 function Refresh(opts){
     if(!(this instanceof Refresh)){
         new Refresh(opts)

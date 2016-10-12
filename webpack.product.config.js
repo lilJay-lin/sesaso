@@ -18,7 +18,8 @@ let config = {
         extensions: ['', '.js', 'jsx', '.less', '.css', '.scss', '.ejs', '.png', '.jpg']
     },
     entry: {
-        'index': path.resolve(APP_PATH, 'index')
+        'index': path.resolve(APP_PATH, 'index'),
+        'recommend': path.resolve(APP_PATH, 'recommend')
     },
     output: {
         path: BUILD_PATH,
@@ -26,9 +27,9 @@ let config = {
         public: '/',
         chunkFilename:  '[name].chunk.min.js'
     },
-     jshint: {
-     "esnext": true
-     },
+    jshint: {
+        "esnext": true
+    },
     module: {
         /*        preLoaders:[
          {
@@ -74,12 +75,7 @@ let config = {
     },
     plugins:[
         new webpack.optimize.UglifyJsPlugin({minimize: true}),
-                //new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
-/*        new webpack.optimize.CommonsChunkPlugin({
-         name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
-         chunks: ['detail', 'index'],
-         minChunks: chunks.length // 提取所有entry共同依赖的模块
-         }),*/
+        //new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
         /*        new HtmlWebpackPlugin({
          template: './src/index.html',
          filename: 'index.html',
@@ -87,22 +83,23 @@ let config = {
          chunks: ['model2', 'vendors']
          })*/
 //provide $, jQuery and window.jQuery to every script
-        new webpack.ProvidePlugin({
-         $: "jquery",
-         jQuery: "jquery",
-         "window.jQuery": "jquery"
-        }),
         new ExtractTextPlugin('css/[name].[contenthash:8].css', {allChunks: true}),
-/*        new HtmlWebpackPlugin({
-            template: './src/detail.html',
-            filename: 'detail.html',
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/recommend.html',
+            filename: 'recommend.html',
             inject: 'body',
-            chunks: ['detail', 'vendors']
-        }),*/
+            chunks: ['recommend']
+        }),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
-            inject: 'body'
+            inject: 'body',
+            chunks: ['index']
         })
     ]
 };

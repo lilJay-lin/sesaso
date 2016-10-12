@@ -18,7 +18,7 @@ let config = {
         extensions: ['', '.js', 'jsx', '.less', '.css', '.scss', '.ejs', '.png', '.jpg']
     },
     entry: {
-        /*'detail': path.resolve(APP_PATH, 'detail'),*/
+        'recommend': path.resolve(APP_PATH, 'recommend'),
         'index': path.resolve(APP_PATH, 'index')
     },
     output: {
@@ -76,11 +76,11 @@ let config = {
     plugins:[
         //new webpack.optimize.UglifyJsPlugin({minimize: true}),
         /*        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),*/
-        /*        new CommonsChunkPlugin({
-         name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
-         chunks: chunks,
-         minChunks: chunks.length // 提取所有entry共同依赖的模块
-         })*/
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
+            chunks: ['recommend', 'index'],
+            minChunks: Infinity // 提取所有entry共同依赖的模块
+        }),
         /*        new HtmlWebpackPlugin({
          template: './src/index.html',
          filename: 'index.html',
@@ -93,17 +93,17 @@ let config = {
          jQuery: "jquery",
          "window.jQuery": "jquery"
         }),
-/*        new HtmlWebpackPlugin({
-            template: './src/detail.html',
-            filename: 'detail.html',
+        new HtmlWebpackPlugin({
+            template: './src/recommend.html',
+            filename: 'recommend.html',
             inject: 'body',
-            chunks: ['detail']
-        }),*/
+            chunks: ['recommend', 'vendors']
+        }),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
             inject: 'body',
-            /*chunks: ['index']*/
+            chunks: ['index', 'vendors']
         })
     ]
 };

@@ -9,12 +9,13 @@
  * */
 function setupIFrame(frame, origin){
     window.addEventListener('message', function(evt){
-        if((origin === '*' || evt.origin === origin) && evt.source === frame.contentWindow){
+        if((origin === '*' || evt.origin === origin)){
             if (typeof frame === 'string') {
                 frame = document.querySelector(frame);
             }
             if (frame && frame.name === 'iframe'){
                 frame.height = parseInt(evt.data, 10); //可预期的数据只能是数字，防止xss攻击
+                console.log(evt.data)
             }
         }
     })
